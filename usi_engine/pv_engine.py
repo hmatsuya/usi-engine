@@ -27,12 +27,12 @@ class PVEngine(cshogi.usi.Engine):
         self.pvs = [None]
         # self.pv_prog = re.compile('^info .*pv (.*)')
         self.pv_prog = re.compile('^info.*? pv (?P<pv>.*)')
-        self.multipv_prog = re.compile('multipv (?P<pvnum>\d+)')
+        self.multipv_prog = re.compile(r'multipv (?P<pvnum>\d+)')
         self.clear_result()
         # if self.multipv:
             # self.pv_prog = self.multipv_prog
 
-        self.score_prog = re.compile('score (cp|mate) ((-|\+)?\d?)')
+        self.score_prog = re.compile(r'score (cp|mate) ((-|\+)?\d+)')
 
         self.id = self.engine_count
         self.engine_count += 1
