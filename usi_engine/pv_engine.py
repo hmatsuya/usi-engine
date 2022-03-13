@@ -69,6 +69,7 @@ class PVEngine(cshogi.usi.Engine):
 
     def pv_listener(self, line):
         logging.debug(f"in PVEngine.pv_listener(): engine={self.id}")
+        logging.debug(f"line: {line}")
 
         # if (self.print or self.debug) and not line.startswith('bestmove'):
         if (self.print or self.debug) or (self.info and line.startswith('info')):
@@ -106,19 +107,19 @@ class PVEngine(cshogi.usi.Engine):
 
         # extract score
         score_match = self.score_prog.search(line)
-        assert (score_match is not None), f'score_match is None: {line}'
-        logging.debug(f'score_match.groups(): {score_match.groups()}')
+        # assert (score_match is not None), f'score_match is None: {line}'
         if score_match is None:
-            return
-
-        if score_match.group(1) == 'cp':
-            self.scores[pvnum] = int(score_match.group(2))
-            assert(isinstance(self.scores[pvnum], int))
-        elif score_match.group(1) == 'mate':
-            if score_match.group(2).find('-') == -1:
-                self.scores[pvnum] = 30000
-            else:
-                self.scores[pvnum] = -30000
+            self.scores[pvnum] = min(score for score in self.scores if score is not None)
+        else:
+            logging.debug(f'score_match.groups(): {score_match.groups()}')
+            if score_match.group(1) == 'cp':
+                self.scores[pvnum] = int(score_match.group(2))
+                assert(isinstance(self.scores[pvnum], int))
+            elif score_match.group(1) == 'mate':
+                if score_match.group(2).find('-') == -1:
+                    self.scores[pvnum] = 30000
+                else:
+                    self.scores[pvnum] = -30000
 
         assert(isinstance(self.scores[pvnum], int))
 
