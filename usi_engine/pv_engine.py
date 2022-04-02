@@ -29,8 +29,8 @@ class PVEngine(cshogi.usi.Engine):
         self.pv_prog = re.compile('^info.*? pv (?P<pv>.*)')
         self.multipv_prog = re.compile(r'multipv (?P<pvnum>\d+)')
         self.clear_result()
-        # if self.multipv:
-            # self.pv_prog = self.multipv_prog
+        if self.multipv:
+            self.setoption('multipv', self.multipv)
 
         self.score_prog = re.compile(r'score (cp|mate) ((-|\+)?\d+)')
 
