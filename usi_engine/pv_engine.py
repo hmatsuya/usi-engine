@@ -20,6 +20,7 @@ class PVEngine(cshogi.usi.Engine):
         self.print = kwargs.pop('print', False)
         self.debug = kwargs.pop('debug', False)
         self.info= kwargs.pop('info', False)
+        self.id = kwargs.pop('id', 'na')
         self.options = {} # for crash recovery
         super().__init__(*args, **kwargs)
 
