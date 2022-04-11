@@ -114,7 +114,7 @@ class PVEngine(cshogi.usi.Engine):
         score_match = self.score_prog.search(line)
         # assert (score_match is not None), f'score_match is None: {line}'
         if score_match is None:
-            self.scores[pvnum] = min(score for score in self.scores if score is not None)
+            self.scores[pvnum] = None
         else:
             logging.debug(f'score_match.groups(): {score_match.groups()}')
             if score_match.group(1) == 'cp':
@@ -126,7 +126,6 @@ class PVEngine(cshogi.usi.Engine):
                 else:
                     self.scores[pvnum] = -30000
 
-        assert(isinstance(self.scores[pvnum], int))
 
     def go(self, ponder=False, btime=None, wtime=None, byoyomi=None, binc=None, winc=None, nodes=None, listener=None):
         self.clear_result()
