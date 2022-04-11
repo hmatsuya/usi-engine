@@ -183,7 +183,12 @@ class PVEngine(cshogi.usi.Engine):
         logging.debug(f'setting position again: {self.current_position}')
         self.position(**self.current_position)
 
-    def stop(self, listener=None):
+    def stop(self, listener=None, wait_bestmove=True):
+        self.pv_buffer.append("stop")
+        if not wait_bestmove:
+            super().stop()
+            return
+
         if self.debug: listener = print
         cmd = 'stop'
         if listener:
