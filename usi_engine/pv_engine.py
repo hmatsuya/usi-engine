@@ -37,7 +37,6 @@ class PVEngine(cshogi.usi.Engine):
 
         self.score_prog = re.compile(r'score (cp|mate) ((-|\+)?\d+)')
 
-        self.id = self.engine_count
         self.engine_count += 1
 
     def clear_result(self):
