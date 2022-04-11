@@ -4,6 +4,7 @@ from cshogi.usi import Engine
 import re
 
 import logging
+import collections
 
 # logging.basicConfig(
 #     format='%(asctime)s[%(levelname)s] %(message)s',
@@ -22,6 +23,7 @@ class PVEngine(cshogi.usi.Engine):
         self.info= kwargs.pop('info', False)
         self.id = kwargs.pop('id', 'na')
         self.options = {} # for crash recovery
+        self.pv_buffer = collections.deque([None] * 300, 300)
         super().__init__(*args, **kwargs)
 
         self.scores = [None]
@@ -66,11 +68,14 @@ class PVEngine(cshogi.usi.Engine):
             logging.warning('the engine proc is dead in position(). restarting...')
             self.restart_engine()
             return # position is set when restarting engine
+        self.pv_buffer.append(kwargs)
         super().position(*args, **kwargs)
 
     def pv_listener(self, line):
         logging.debug(f"in PVEngine.pv_listener(): engine={self.id}")
         logging.debug(f"line: {line}")
+        if len(line.strip()) > 0:
+            self.pv_buffer.append(line.strip())
 
         # if (self.print or self.debug) and not line.startswith('bestmove'):
         if (self.print or self.debug) or (self.info and line.startswith('info')):
@@ -170,6 +175,7 @@ class PVEngine(cshogi.usi.Engine):
                 listener(line)
             if line[:8] == 'bestmove':
                 items = line[9:].split(' ')
+                self.pv_buffer.append(items[0])
                 if len(items) == 3 and items[1] == 'ponder':
                     return items[0], items[2]
                 else:
