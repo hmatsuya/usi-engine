@@ -73,7 +73,7 @@ class PVEngine(cshogi.usi.Engine):
     def pv_listener(self, line):
         logging.debug(f"in PVEngine.pv_listener(): engine={self.id}")
         logging.debug(f"line: {line}")
-        if len(line.strip()) > 0:
+        if line and line.strip():
             self.pv_buffer.append(line.strip())
 
         # if (self.print or self.debug) and not line.startswith('bestmove'):
